@@ -4,22 +4,7 @@
 # This software is licensed under the ISC Liscense.
 # https://github.com/cswl/tsu/blob/master/LICENSE.md
 
-show_usage() {
-  echo 'tsu - a wrapper for su for Termux'
-  echo
-  echo 'Usage: tsu [-a|-e|-p|-s <shell>]'
-  echo
-  echo '-s [</path/to/shell>]'
-  echo '    Use an alternate specified shell. `//usr` is expanded to $PREFIX.'
-  echo '-p'
-  echo '    Prepend /system/bin:/system/xbin to PATH and /system/lib{64} to LD_LIBRARY_PATH.'
-  echo '-a'
-  echo '    Append /system/bin:/system/xbin to PATH and /system/lib{64} to LD_LIBRARY_PATH.'
-  echo '-e'
-  echo '    Setup up some enviroment variables as when in Termux.'
-  echo
-  echo 'For details of the options see:'
-  echo 'https://github.com/cswl/tsu'
+show_usage() { 
 }
 
 # parse the options
@@ -46,11 +31,7 @@ while getopts ':aehps:c' opt; do
     p)
       shift $((OPTIND - 1))
       PREPEND_SYSTEM_PATH=1
-      ;;
-    c)
-      shift $((OPTIND - 1))
-      USER_COMMAND="$@"
-      ;;
+      ;; 
     *)
       echo "Unknown option -$OPTARG" 2>&1
       exit 1
@@ -136,15 +117,11 @@ else
     fi
   done
 fi
+ 
+exec "$SU_BINARY" --preserve-environment -c "LD_LIBRARY_PATH=$OLD_LIBRARY_PATH PATH=$PATH $ROOT_SHELL"
 
-if [ -z "$USER_COMMAND" ]; then
-  exec "$SU_BINARY" --preserve-environment -c "LD_LIBRARY_PATH=$OLD_LIBRARY_PATH PATH=$PATH $ROOT_SHELL"
-else
-  exec "$SU_BINARY" --preserve-environment -c "LD_LIBRARY_PATH=$OLD_LIBRARY_PATH PATH=$PATH $USER_COMMAND"
 
-fi
-
-# we didnt find su binary
+# We didnt find su binary
 printf "No superuser binary detected. \\n"
 printf "Are you rooted? \\n"
 exit 1

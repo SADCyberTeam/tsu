@@ -5,9 +5,7 @@
 # https://github.com/cswl/tsu/blob/master/LICENSE.md
 
 show_usage() {
-  echo 'tsudo - run Termux commands as other users: default root'
-  echo
-  echo 'Usage: tsudo cmd'
+
 }
 
 # TODO: add ability to change user / group via:
